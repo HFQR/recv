@@ -1,215 +1,60 @@
 pub mod macros;
 
-use core::fmt;
-use serde::{Deserialize, Serialize};
-use serde_repr::{Deserialize_repr, Serialize_repr};
 use std::fmt::{Debug, Display};
-use std::time::Duration;
 
-#[derive(Clone, Copy, PartialEq, Serialize, Deserialize)]
-#[repr(u8)]
-pub enum Direction {
-    LONG = 1,
-    SHORT = 0,
-}
-
-impl Debug for Direction {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::LONG => write!(f, "LONG"),
-            Self::SHORT => write!(f, "SHORT"),
-        }
+pub fn code_to_u64(str: &'static str) -> u64 {
+    let mut buf = [0; 8];
+    for (idx, char) in str.as_bytes().iter().enumerate() {
+        buf[idx] = *char;
     }
+    u64::from_le_bytes(buf)
 }
 
-impl Display for Direction {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::LONG => write!(f, "LONG"),
-            Self::SHORT => write!(f, "SHORT"),
-        }
-    }
-}
 
-#[derive(Clone, Copy, PartialEq, Serialize, Deserialize)]
-#[repr(u8)]
-pub enum Offset {
-    OPEN = 1,
-    CLOSE = 2,
-    CLOSETODAY = 3,
-    CLOSEYESTERDAY = 4,
-}
+pub trait TickDataStructure {
+    // 成交均价
+    fn last_price(&self) -> f64;
 
-impl Debug for Offset {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::OPEN => write!(f, "OPEN"),
-            Self::CLOSE => write!(f, "CLOSE"),
-            Self::CLOSETODAY => write!(f, "CLOSETODAY"),
-            Self::CLOSEYESTERDAY => write!(f, "CLOSEYESTERDAY"),
-        }
-    }
-}
+    //成交量
+    fn volume(&self) -> u32;
 
-impl Display for Offset {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::OPEN => write!(f, "OPEN"),
-            Self::CLOSE => write!(f, "CLOSE"),
-            Self::CLOSETODAY => write!(f, "CLOSETODAY"),
-            Self::CLOSEYESTERDAY => write!(f, "CLOSEYESTERDAY"),
-        }
-    }
-}
+    //持仓量
+    fn open_interest(&self) -> u32;
 
-#[derive(Clone, Copy, PartialEq, Serialize, Deserialize)]
-#[repr(u8)]
-pub enum Status {
-    ERROR = 0,
-    SUBMITTING = 1,
-    NOTTRADED = 2,
-    ALLTRADED = 3,
-    CANCELLED = 4,
-    CANCELFAILED = 5,
-}
+    // 五档买方挂单价格
+    fn bid_price(&self, index: usize) -> f64;
 
-impl Debug for Status {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::ERROR => write!(f, "ERROR"),
-            Self::SUBMITTING => write!(f, "SUBMITTING"),
-            Self::NOTTRADED => write!(f, "NOTTRADED"),
-            Self::ALLTRADED => write!(f, "ALLTRADED"),
-            Self::CANCELLED => write!(f, "CANCELLED"),
-            Self::CANCELFAILED => write!(f, "CANCELFAILED"),
-        }
-    }
-}
+    // 五档卖方挂单价格
+    fn ask_price(&self, index: usize) -> f64;
 
-impl Display for Status {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::ERROR => write!(f, "ERROR"),
-            Self::SUBMITTING => write!(f, "SUBMITTING"),
-            Self::NOTTRADED => write!(f, "NOTTRADED"),
-            Self::ALLTRADED => write!(f, "ALLTRADED"),
-            Self::CANCELLED => write!(f, "CANCELLED"),
-            Self::CANCELFAILED => write!(f, "CANCELFAILED"),
-        }
-    }
-}
+    // 五档买挂单量
+    fn bid_volume(&self, index: usize) -> u32;
 
-#[derive(Clone, Copy, PartialEq)]
-#[repr(u8)]
-pub enum OrderType {
-    LIMIT = 0,
-    MARKET = 1,
-    STOP = 2,
-    FAK = 3,
-    FOK = 4,
-}
+    // 五档卖挂单量
+    fn ask_volume(&self, index: usize) -> u32;
 
-impl Debug for OrderType {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::LIMIT => write!(f, "LIMIT"),
-            Self::MARKET => write!(f, "MARKET"),
-            Self::STOP => write!(f, "STOP"),
-            Self::FAK => write!(f, "FAK"),
-            Self::FOK => write!(f, "FOK"),
-        }
-    }
-}
+    // 中间价
+    fn mid_price(&self) -> f64;
 
-impl Display for OrderType {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::LIMIT => write!(f, "LIMIT"),
-            Self::MARKET => write!(f, "MARKET"),
-            Self::STOP => write!(f, "STOP"),
-            Self::FAK => write!(f, "FAK"),
-            Self::FOK => write!(f, "FOK"),
-        }
-    }
-}
+    // 成交金额
+    fn turnover(&self) -> f64;
 
-#[derive(Clone, Copy, PartialEq, Serialize_repr, Deserialize_repr)]
-#[repr(u8)]
-pub enum Exchange {
-    SHFE = 0,
-    CFFEX = 1,
-    CZCE = 2,
-    DCE = 3,
-    INE = 4,
-    COMEX = 5,
-}
+    //根据当天其实的时间计算出时分秒
+    fn hms(&self, base_time: u32) -> (u32, u32, u32);
 
-impl Default for Exchange {
-    fn default() -> Self {
-        Self::SHFE
-    }
-}
+    // 当天 小时 + 分钟 + 秒数 时间戳
+    fn timestamp(&self, base_time: u32) -> u32;
 
-impl Debug for Exchange {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::SHFE => write!(f, "SHFE"),
-            Self::CFFEX => write!(f, "CFFEX"),
-            Self::CZCE => write!(f, "CZCE"),
-            Self::DCE => write!(f, "DCE"),
-            Self::INE => write!(f, "INE"),
-            Self::COMEX => write!(f, "COMEX"),
-        }
-    }
-}
+    // 时间戳
+    fn snaptime(&self) -> u32;
 
-impl Display for Exchange {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::SHFE => write!(f, "SHFE"),
-            Self::CFFEX => write!(f, "CFFEX"),
-            Self::CZCE => write!(f, "CZCE"),
-            Self::DCE => write!(f, "DCE"),
-            Self::INE => write!(f, "INE"),
-            Self::COMEX => write!(f, "COMEX"),
-        }
-    }
-}
+    // 毫秒数
+    fn ms(&self) -> u16;
 
-/// Order Data
-/// In here
-#[derive(Clone, Debug, Copy)]
-pub struct OrderData {
-    pub symbol: u64,
-    pub exchange: Exchange,
-    pub token: u32,
-    pub order_id: u64,
-    pub trade_id: u64,
-    pub order_type: OrderType,
-    pub direction: Direction,
-    pub offset: Offset,
+    // 合约代码名称 也许是其他的数字 用于后期转换判断
+    fn code(&self) -> u64;
 
-    pub price: f64,
-    pub volume: u32,
-    pub status: Status,
-    pub timestamp: Duration,
-}
+    fn ask_volume_all(&self) -> u32;
 
-/// Order Request
-#[derive(Clone, Debug, Copy)]
-pub struct OrderRequest {
-    pub symbol: &'static str,
-    pub exchange: Exchange,
-    pub direction: Direction,
-    pub order_type: OrderType,
-    pub volume: u32,
-    pub price: f64,
-    pub offset: Offset,
-    pub reference: u32,
-}
-
-/// Cancel Request
-#[derive(Clone, Debug, Copy)]
-pub struct CancelRequest {
-    pub order_id: u64,
+    fn bid_volume_all(&self) -> u32;
 }
