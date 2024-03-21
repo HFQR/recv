@@ -1,6 +1,5 @@
 pub mod macros;
-
-use std::fmt::{Debug, Display};
+use std::ops::{Add, Div, Mul, Sub};
 
 pub fn code_to_u64(str: &'static str) -> u64 {
     let mut buf = [0; 8];
@@ -10,16 +9,18 @@ pub fn code_to_u64(str: &'static str) -> u64 {
     u64::from_le_bytes(buf)
 }
 
-
-pub trait TickDataStructure {
+pub trait TickDataStructure<T>
+where
+    T: Add + Mul + Div + Sub + PartialEq + PartialOrd,
+{
     // 成交均价
     fn last_price(&self) -> f64;
 
     //成交量
-    fn volume(&self) -> u32;
+    fn volume(&self) -> T;
 
     //持仓量
-    fn open_interest(&self) -> u32;
+    fn open_interest(&self) -> T;
 
     // 五档买方挂单价格
     fn bid_price(&self, index: usize) -> f64;
@@ -28,10 +29,10 @@ pub trait TickDataStructure {
     fn ask_price(&self, index: usize) -> f64;
 
     // 五档买挂单量
-    fn bid_volume(&self, index: usize) -> u32;
+    fn bid_volume(&self, index: usize) -> T;
 
     // 五档卖挂单量
-    fn ask_volume(&self, index: usize) -> u32;
+    fn ask_volume(&self, index: usize) -> T;
 
     // 中间价
     fn mid_price(&self) -> f64;
@@ -54,7 +55,11 @@ pub trait TickDataStructure {
     // 合约代码名称 也许是其他的数字 用于后期转换判断
     fn code(&self) -> u64;
 
-    fn ask_volume_all(&self) -> u32;
+    fn ask_volume_all(&self) -> T;
 
-    fn bid_volume_all(&self) -> u32;
+    fn bid_volume_all(&self) -> T;
+
+    fn buy_volume(&self) -> T;
+
+    fn sell_volume(&self) -> T;
 }
