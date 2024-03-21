@@ -47,7 +47,7 @@ where
     fn timestamp(&self, base_time: u32) -> u32;
 
     // 时间戳
-    fn snaptime(&self) -> u32;
+    fn snap_time(&self) -> u32;
 
     // 毫秒数
     fn ms(&self) -> u16;
