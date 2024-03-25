@@ -1,4 +1,5 @@
 pub mod macros;
+
 use std::ops::{Add, Div, Mul, Sub};
 
 pub fn code_to_u64(str: &'static str) -> u64 {
@@ -44,10 +45,10 @@ where
     fn hms(&self, base_time: u32) -> (u32, u32, u32);
 
     // 当天 小时 + 分钟 + 秒数 时间戳
-    fn timestamp(&self, base_time: u32) -> u32;
+    fn timestamp(&self, base_time: u64) -> u64;
 
     // 时间戳
-    fn snap_time(&self) -> u32;
+    fn snap_time(&self) -> u64;
 
     // 毫秒数
     fn ms(&self) -> u16;
