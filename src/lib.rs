@@ -11,8 +11,8 @@ pub fn code_to_u64(str: &'static str) -> u64 {
 }
 
 pub trait TickDataStructure<T>
-where
-    T: Add + Mul + Div + Sub + PartialEq + PartialOrd,
+    where
+        T: Add + Mul + Div + Sub + PartialEq + PartialOrd,
 {
     // 成交均价
     fn last_price(&self) -> f64;
@@ -63,14 +63,4 @@ where
     fn buy_volume(&self) -> T;
 
     fn sell_volume(&self) -> T;
-}
-
-pub trait Message<F, T>
-where
-    F: Add + Mul + Div + Sub + PartialEq + PartialOrd,
-    T: Default,
-{
-    fn on_tick(&mut self, tick: impl TickDataStructure<F>);
-
-    fn on_order(&mut self, call: T);
 }
