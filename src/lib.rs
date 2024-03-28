@@ -64,3 +64,13 @@ where
 
     fn sell_volume(&self) -> T;
 }
+
+pub trait Message<F, T>
+where
+    F: Add + Mul + Div + Sub + PartialEq + PartialOrd,
+    T: Default,
+{
+    fn on_tick(&mut self, tick: impl TickDataStructure<F>);
+
+    fn on_order(&mut self, call: T);
+}
