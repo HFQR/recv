@@ -12,7 +12,7 @@ pub fn code_to_u64(str: &'static str) -> u64 {
 
 pub trait TickDataStructure<T>
     where
-        T: Add + Mul + Div + Sub + PartialEq + PartialOrd,
+        T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
 {
     // 成交均价
     fn last_price(&self) -> f64;
