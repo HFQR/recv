@@ -63,4 +63,71 @@ pub trait TickDataStructure<T>
     fn buy_volume(&self) -> T;
 
     fn sell_volume(&self) -> T;
+
+    fn columns(&self) -> [&'static str; 29] {
+        [
+            "last_price",
+            "mid_price",
+            "volume",
+            "turnover",
+            "buy_volume",
+            "sell_volume",
+            "open_interest",
+            "snap_time",
+            "ms",
+            "ask_price_1",
+            "ask_price_2",
+            "ask_price_3",
+            "ask_price_4",
+            "ask_price_5",
+            "ask_volume_1",
+            "ask_volume_2",
+            "ask_volume_3",
+            "ask_volume_4",
+            "ask_volume_5",
+            "bid_price_1",
+            "bid_price_2",
+            "bid_price_3",
+            "bid_price_4",
+            "bid_price_5",
+            "bid_volume_1",
+            "bid_volume_2",
+            "bid_volume_3",
+            "bid_volume_4",
+            "bid_volume_5",
+        ]
+    }
+
+    fn display(&self) -> [f64; 29] {
+        [self.last_price(),
+            self.mid_price(),
+            self.volume() as f64,
+            self.turnover(),
+            self.buy_volume() as f64,
+            self.sell_volume() as f64,
+            self.open_interest() as f64,
+            self.snap_time() as f64,
+            self.ms() as f64,
+            self.ask_price(0),
+            self.ask_price(1),
+            self.ask_price(2),
+            self.ask_price(3),
+            self.ask_price(4),
+            self.ask_volume(0) as f64,
+            self.ask_volume(1) as f64,
+            self.ask_volume(2) as f64,
+            self.ask_volume(3) as f64,
+            self.ask_volume(4) as f64,
+            self.bid_price(0),
+            self.bid_price(1),
+            self.bid_price(2),
+            self.bid_price(3),
+            self.bid_price(4),
+            self.bid_volume(0) as f64,
+            self.bid_volume(1) as f64,
+            self.bid_volume(2) as f64,
+            self.bid_volume(3) as f64,
+            self.bid_volume(4) as f64,
+        ]
+    }
 }
