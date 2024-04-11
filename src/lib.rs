@@ -1,5 +1,7 @@
 pub mod macros;
 
+use core::fmt;
+use std::fmt::Formatter;
 use std::ops::{Add, Div, Mul, Sub};
 
 pub fn code_to_u64(str: &'static str) -> u64 {
@@ -8,6 +10,29 @@ pub fn code_to_u64(str: &'static str) -> u64 {
         buf[idx] = *char;
     }
     u64::from_le_bytes(buf)
+}
+
+/// timestamp: Second
+/// ms: 0-1000 ms
+#[derive(Debug)]
+pub struct Time {
+    pub timestamp: u64,
+    pub ms: u16,
+}
+
+impl fmt::Display for Time {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let timestamp = self.timestamp + 8 * 3600;
+        let seconds = timestamp % (24 * 3600);
+        let hour = seconds / 3600;
+        let minute = (seconds - hour * 3600) / 60;
+        let second = seconds % 60;
+        write!(
+            f,
+            "{:0>2}:{:0>2}:{:0>2}.{:0>3}",
+            hour, minute, second, self.ms
+        )
+    }
 }
 
 pub trait TickDataStructure<T>
@@ -64,6 +89,13 @@ pub trait TickDataStructure<T>
 
     fn sell_volume(&self) -> T;
 
+    fn time(&self) -> Time {
+        Time {
+            timestamp: self.snap_time(),
+            ms: self.ms(),
+        }
+    }
+
     fn columns(&self) -> [&'static str; 29] {
         [
             "last_price",
@@ -99,7 +131,8 @@ pub trait TickDataStructure<T>
     }
 
     fn display(&self) -> [f64; 29] {
-        [self.last_price(),
+        [
+            self.last_price(),
             self.mid_price(),
             self.volume().into(),
             self.turnover(),
