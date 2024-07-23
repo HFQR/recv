@@ -165,14 +165,14 @@ pub trait TickDataStructure<T>
     }
 }
 
-#[derive(Eq, PartialOrd, PartialEq)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
 #[repr(u8)]
 pub enum Direction {
     Long,
     Short,
 }
 
-#[derive(Eq, PartialOrd, PartialEq)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
 #[repr(u8)]
 pub enum Offset {
     Open,
@@ -181,7 +181,7 @@ pub enum Offset {
     CloseYesterday,
 }
 
-#[derive(Eq, PartialOrd, PartialEq)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
 #[repr(u8)]
 pub enum Exchange {
     SHFE, // 上海期货交易所
@@ -192,7 +192,7 @@ pub enum Exchange {
     DCE, // 大商所
 }
 
-#[derive(Eq, PartialOrd, PartialEq)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
 #[repr(u8)]
 pub enum OrderType {
     Limit, // 限价订单
@@ -201,7 +201,7 @@ pub enum OrderType {
     Market, // 市价单
 }
 
-#[derive(Eq, PartialOrd, PartialEq)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
 #[repr(u8)]
 pub enum Status {
     Submitting,
@@ -232,7 +232,7 @@ pub trait Order<'a> {
     fn token(&self) -> u32 {
         unimplemented!()
     }
-    fn order_id(&self) -> f64 {
+    fn order_id(&self) -> u64 {
         unimplemented!()
     }
     // 此函数用于数据变为u8字节流
