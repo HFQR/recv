@@ -40,15 +40,19 @@ pub trait TickDataStructure<T>
         T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
 {
     // 成交均价
+
     fn last_price(&self) -> f64;
 
     //成交量
+
     fn volume(&self) -> T;
 
     //持仓量
+
     fn open_interest(&self) -> T;
 
     // 五档买方挂单价格
+
     fn bid_price(&self, index: usize) -> f64;
 
     // 五档卖方挂单价格
@@ -62,7 +66,6 @@ pub trait TickDataStructure<T>
 
     // 中间价
     fn mid_price(&self) -> f64;
-
     // 成交金额
     fn turnover(&self) -> f64;
 
@@ -75,9 +78,14 @@ pub trait TickDataStructure<T>
     // 时间戳
     fn snap_time(&self) -> u64;
 
-    // 毫秒数
-    fn ms(&self) -> u16;
+    // 可以被忽略 仅用于本地回测
+    fn signal(&self) -> f64 {
+        0.0
+    }
 
+    // 毫秒数
+
+    fn ms(&self) -> u16;
     // 合约代码名称 也许是其他的数字 用于后期转换判断
     fn code(&self) -> u64;
 
@@ -184,12 +192,12 @@ pub enum Offset {
 #[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
 #[repr(u8)]
 pub enum Exchange {
-    SHFE, // 上海期货交易所
-    CFFEX, // 中国金融交易所
-    INE, // 能源交易所
+    SHFE,    // 上海期货交易所
+    CFFEX,   // 中国金融交易所
+    INE,     // 能源交易所
     BINANCE, // 币安交易所
-    CZCE, // 中金所
-    DCE, // 大商所
+    CZCE,    // 中金所
+    DCE,     // 大商所
 }
 
 #[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
@@ -211,16 +219,25 @@ pub enum Status {
 }
 
 pub trait Order<'a> {
-    fn price(&self) -> f64;
+    fn price(&self) -> f64 {
+        unimplemented!()
+    }
 
     //手数
-    fn volume(&self) -> f64;
+    fn volume(&self) -> f64 {
+        unimplemented!()
+    }
 
     // 方向
-    fn direction(&self) -> Direction;
+    fn direction(&self) -> Direction {
+        unimplemented!()
+    }
 
     //执行类型
-    fn offset(&self) -> Offset;
+    fn offset(&self) -> Offset {
+        unimplemented!()
+    }
+
     fn status(&self) -> Status {
         unimplemented!()
     }
@@ -232,9 +249,11 @@ pub trait Order<'a> {
     fn token(&self) -> u32 {
         unimplemented!()
     }
+
     fn order_id(&self) -> u64 {
         unimplemented!()
     }
+
     // 此函数用于数据变为u8字节流
     fn dummy(&self) -> &'a [u8] {
         unimplemented!()
