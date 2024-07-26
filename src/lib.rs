@@ -37,8 +37,8 @@ impl fmt::Display for Time {
 }
 
 pub trait TickDataStructure<T>
-where
-    T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
+    where
+        T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
 {
     // 成交均价
 
@@ -220,10 +220,10 @@ pub enum Status {
     NotTraded,
     Traded,
     Cancel,
-    Invalid
+    Invalid,
 }
 
-pub trait Order<'a> {
+pub trait Order {
     fn price(&self) -> f64 {
         unimplemented!()
     }
@@ -265,7 +265,7 @@ pub trait Order<'a> {
     }
 
     // 此函数用于数据变为u8字节流
-    fn dummy(&self) -> &'a [u8] {
+    fn dummy<'a>(&self) -> &'a [u8] {
         unimplemented!()
     }
 }
