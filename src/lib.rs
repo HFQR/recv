@@ -220,6 +220,7 @@ pub enum Status {
     NotTraded,
     Traded,
     Cancel,
+    Invalid
 }
 
 pub trait Order<'a> {
