@@ -1,6 +1,7 @@
 pub mod macros;
 
 use core::fmt;
+use serde::{Deserialize, Serialize};
 use std::fmt::Formatter;
 use std::ops::{Add, Div, Mul, Sub};
 
@@ -36,8 +37,8 @@ impl fmt::Display for Time {
 }
 
 pub trait TickDataStructure<T>
-    where
-        T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
+where
+    T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
 {
     // 成交均价
 
@@ -83,8 +84,11 @@ pub trait TickDataStructure<T>
         0.0
     }
 
-    // 毫秒数
+    fn datetime(&self) -> String {
+        "".to_string()
+    }
 
+    // 毫秒数
     fn ms(&self) -> u16;
     // 合约代码名称 也许是其他的数字 用于后期转换判断
     fn code(&self) -> u64;
@@ -173,14 +177,14 @@ pub trait TickDataStructure<T>
     }
 }
 
-#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum Direction {
     Long,
     Short,
 }
 
-#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum Offset {
     Open,
@@ -189,7 +193,7 @@ pub enum Offset {
     CloseYesterday,
 }
 
-#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum Exchange {
     SHFE,    // 上海期货交易所
@@ -200,7 +204,7 @@ pub enum Exchange {
     DCE,     // 大商所
 }
 
-#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum OrderType {
     Limit, // 限价订单
@@ -209,7 +213,7 @@ pub enum OrderType {
     Market, // 市价单
 }
 
-#[derive(Eq, PartialOrd, PartialEq, Copy, Clone)]
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
 #[repr(u8)]
 pub enum Status {
     Submitting,
@@ -230,6 +234,11 @@ pub trait Order<'a> {
 
     // 方向
     fn direction(&self) -> Direction {
+        unimplemented!()
+    }
+
+    // 时间
+    fn datetime(&self) -> String {
         unimplemented!()
     }
 
