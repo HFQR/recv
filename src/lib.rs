@@ -37,8 +37,8 @@ impl fmt::Display for Time {
 }
 
 pub trait TickDataStructure<T>
-where
-    T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
+    where
+        T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
 {
     // 成交均价
 
@@ -228,6 +228,9 @@ pub trait Order {
         unimplemented!()
     }
 
+    fn send_volume(&self) -> i64 {
+        unimplemented!()
+    }
     //手数
     fn volume(&self) -> i64 {
         unimplemented!()
