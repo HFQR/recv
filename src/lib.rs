@@ -94,13 +94,11 @@ pub trait TickDataStructure<T>
     fn code(&self) -> u64;
 
     fn ask_volume_all(&self) -> T;
-
     fn bid_volume_all(&self) -> T;
-
     fn buy_volume(&self) -> T;
-
     fn sell_volume(&self) -> T;
-
+    fn buy_count(&self) -> i32;
+    fn sell_count(&self) -> i32;
     fn time(&self) -> Time {
         Time {
             timestamp: self.snap_time(),
