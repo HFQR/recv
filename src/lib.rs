@@ -222,6 +222,10 @@ pub enum Status {
 }
 
 pub trait Order {
+    fn code(&self) -> u64 {
+        unimplemented!()
+    }
+
     fn price(&self) -> f64 {
         unimplemented!()
     }
