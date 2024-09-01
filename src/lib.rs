@@ -209,6 +209,7 @@ pub enum OrderType {
     Fak,
     Fok,
     Market, // 市价单
+    Maker, // 做市单
 }
 
 #[derive(Eq, PartialOrd, PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
