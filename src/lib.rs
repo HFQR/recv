@@ -231,9 +231,6 @@ pub trait Order {
         unimplemented!()
     }
 
-    fn send_volume(&self) -> i64 {
-        unimplemented!()
-    }
     //手数
     fn volume(&self) -> i64 {
         unimplemented!()
@@ -241,6 +238,14 @@ pub trait Order {
 
     // 方向
     fn direction(&self) -> Direction {
+        unimplemented!()
+    }
+
+    // 报单价格
+    fn send_price(&self) -> f64 { unimplemented!() }
+
+    // 报单数量
+    fn send_volume(&self) -> i64 {
         unimplemented!()
     }
 
