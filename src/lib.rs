@@ -37,8 +37,8 @@ impl fmt::Display for Time {
 }
 
 pub trait TickDataStructure<T>
-    where
-        T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
+where
+    T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
 {
     // 成交均价
 
@@ -209,7 +209,7 @@ pub enum OrderType {
     Fak,
     Fok,
     Market, // 市价单
-    Maker, // 做市单
+    Maker,  // 做市单
 }
 
 #[derive(Eq, PartialOrd, PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
@@ -220,6 +220,16 @@ pub enum Status {
     Traded,
     Cancel,
     Invalid,
+}
+
+#[derive(Eq, PartialOrd, PartialEq, Copy, Clone, Debug, Serialize, Deserialize)]
+#[repr(u8)]
+pub enum TimeForce {
+    IOC,
+    GTC,
+    GTX,
+    FOK,
+    FAK,
 }
 
 pub trait Order {
@@ -242,7 +252,9 @@ pub trait Order {
     }
 
     // 报单价格
-    fn send_price(&self) -> f64 { unimplemented!() }
+    fn send_price(&self) -> f64 {
+        unimplemented!()
+    }
 
     // 报单数量
     fn send_volume(&self) -> i64 {
@@ -275,6 +287,9 @@ pub trait Order {
         unimplemented!()
     }
 
+    fn time_force(&self) -> TimeForce {
+        unimplemented!()
+    }
     // 此函数用于数据变为u8字节流
     fn dummy<'a>(&self) -> &'a [u8] {
         unimplemented!()
