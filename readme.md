@@ -2,7 +2,7 @@
 
 提供可供使用的标准`订单信息`抽象和标准`tick抽象`
 
-# how to use人
+# 快速使用
 
 ```toml
 [dependencies]
