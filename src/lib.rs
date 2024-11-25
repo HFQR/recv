@@ -287,7 +287,7 @@ pub trait Order {
         unimplemented!()
     }
 
-    fn time_force(&self) -> Option<TimeForce> {
+    fn time_force(&self) -> TimeForce {
         unimplemented!()
     }
     // 此函数用于数据变为u8字节流
