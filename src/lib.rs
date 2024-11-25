@@ -37,8 +37,8 @@ impl fmt::Display for Time {
 }
 
 pub trait TickDataStructure<T>
-where
-    T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
+    where
+        T: Add + Mul + Div + Sub + PartialEq + PartialOrd + Into<f64>,
 {
     // 成交均价
 
@@ -287,7 +287,7 @@ pub trait Order {
         unimplemented!()
     }
 
-    fn time_force(&self) -> TimeForce {
+    fn time_force(&self) -> Option<TimeForce> {
         unimplemented!()
     }
     // 此函数用于数据变为u8字节流
